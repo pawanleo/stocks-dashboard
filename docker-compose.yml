@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+    networks:
+      - trading-net
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - trading-net
+
+networks:
+  trading-net:
+    driver: bridge

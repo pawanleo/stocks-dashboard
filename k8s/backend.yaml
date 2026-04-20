@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: sleektrader
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sleektrader
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: sleektrader
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: sleektrader/backend:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/tickers
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/tickers
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: sleektrader
+    tier: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: sleektrader
+    tier: backend
+  ports:
+    - port: 4000
+      targetPort: 4000
+      protocol: TCP
+      name: http

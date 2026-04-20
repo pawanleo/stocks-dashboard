@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #f9fafb;
+    --bg-surface: #ffffff;
+    --bg-surface-highlight: #f3f4f6;
+    --border-subtle: #e5e7eb;
+    --color-text-main: #111827;
+    --color-text-muted: #6b7280;
+  }
+  
+  .dark {
+    --bg-main: #0a0a0a;
+    --bg-surface: #171717;
+    --bg-surface-highlight: #262626;
+    --border-subtle: #333333;
+    --color-text-main: #ffffff;
+    --color-text-muted: #9ca3af;
+  }
+
+  body {
+    @apply bg-background text-text transition-colors duration-300;
+  }
+}
+
+/* Custom Recharts styles */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-subtle);
+}
+
+/* Sleek Scrollbar adjustments */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+

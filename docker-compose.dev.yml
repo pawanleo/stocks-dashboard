@@ -1,0 +1,28 @@
+services:
+  backend:
+    # Use ts-node watch for hot reloading
+    command: npm run dev
+    # Map the local code into the container
+    volumes:
+      - ./backend/src:/app/src
+      # We intentionally do NOT map node_modules from the host
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      # Stop the docker build at the Node.js stage, skipping Nginx!
+      target: builder 
+    # Run the Vite live-reloading dev server
+    command: npm run dev
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      # Isolate the container's node_modules from the completely-missing host module folder
+      - /app/node_modules
+    environment:
+      # Vite relies on this to know it's in development
+      - NODE_ENV=development

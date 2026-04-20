@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: sleektrader
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sleektrader
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: sleektrader
+        tier: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: sleektrader/frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: sleektrader
+    tier: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: sleektrader
+    tier: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
